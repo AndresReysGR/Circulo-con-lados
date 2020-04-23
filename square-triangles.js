@@ -10,11 +10,9 @@ gl.clear(gl.COLOR_BUFFER_BIT);
 
 const vertexShader = `#version 300 es
     precision mediump float;
-
     in vec2 position;
     in vec3 color;
     out vec3 vColor;
-
     void main()
     {
         gl_Position = vec4(position, 0, 1);
@@ -24,10 +22,8 @@ const vertexShader = `#version 300 es
 
 const fragmentShader = `#version 300 es
     precision mediump float;
-
     out vec4 fragColor;
     in vec3 vColor;
-
     void main()
     {
         fragColor = vec4(vColor, 1);
@@ -63,36 +59,73 @@ if(!gl.getProgramParameter(program, gl.LINK_STATUS)){
 
 gl.useProgram(program);
 
-const circleInfo = {
-    radius: 0.3,
-    vertices: 10,
-    coords: [],
-    color: []
-}
+const triangleCoords = [
+     0.2, 0.5, 
+    -0.5, 0.3, 
+    -0.5, 0.5, 
 
-for(i = 0; i < circleInfo.vertices; i++){
-    const circumference = 2 * Math.PI * (i / circleInfo.vertices);
-    const x = circleInfo.radius * Math.cos(circumference);
-    const y = circleInfo.radius * Math.sin(circumference);
-    circleInfo.coords.push(x, y);
-    circleInfo.color.push(1, 1, 1);
-}
+     0.2, 0.5, 
+    0.2, 0.3, 
+    -0.5, 0.3,
 
+    0.0, 0.0, 
+    0.0, 0.15, 
+    -0.5, 0.15,    
+
+    0.0, 0.0, 
+    -0.5, 0.0, 
+    -0.5, 0.15,  
+    
+    -0.5, -0.5, 
+    -0.4, -0.5, 
+    -0.5, 0.5, 
+
+    -0.4, -0.5, 
+    -0.4, 0.5, 
+    -0.5, 0.5, 
+
+ 
+];
+
+const vertexColor = [
+    1, 1, 0, 1, 
+    1, 0, 0, 1,
+    1, 0, 0, 1,
+
+    1, 1, 0, 1,
+    1, 1, 0, 1,
+    1, 1, 0, 1,
+
+    1, 0, 0, 1,
+    1, 0, 0, 1,
+    1, 0, 0, 1,
+
+    1, 1, 0, 1,
+    1, 1, 0, 1,
+    1, 1, 0, 1,
+
+    1, 0, 0, 1,
+    1, 0, 0, 1,
+    1, 0, 0, 1,
+
+    1, 1, 0, 1,
+    1, 1, 0, 1,
+    1, 1, 0, 1,
+];
 
 const positionBuffer = gl.createBuffer();
 const colorBuffer = gl.createBuffer();
 
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(circleInfo.coords), gl.STATIC_DRAW);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triangleCoords), gl.STATIC_DRAW);
 const position = gl.getAttribLocation(program, 'position');
 gl.enableVertexAttribArray(position);
 gl.vertexAttribPointer(position, 2, gl.FLOAT, gl.FALSE, 0, 0);
 
 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(circleInfo.color), gl.STATIC_DRAW);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColor), gl.STATIC_DRAW);
 const color = gl.getAttribLocation(program, 'color');
 gl.enableVertexAttribArray(color);
 gl.vertexAttribPointer(color, 3, gl.FLOAT, gl.FALSE, 0, 0);
 
-gl.drawArrays(gl.TRIANGLE_FAN, 0, circleInfo.vertices);
-
+gl.drawArrays(gl.TRIANGLES, 0, 18);
